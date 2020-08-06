@@ -2,31 +2,49 @@ import React from 'react'
 
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg'
 import './styles.css'
+import api from '../../services/api'
 
+export interface Teacher {
+    id: number
+    avatar: string
+    bio: string
+    cost: number
+    name: string
+    subject: string
+    whatsapp: string
+}
 
-function TeacherItem () {
+interface TeacherItemProps {
+    teacher: Teacher
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+    function createNewConnection() {
+        api.post('/connections', {
+            user_id: teacher.id
+        })
+    }
+    
     return (
         <article className="teacher-item">
             <header>
-                <img src="https://avatars3.githubusercontent.com/u/62821363?s=460&u=c3098ea13bac42421094b904fce980ec83760e74&v=4" alt="Yllan Gurgel"/>
+                <img src={teacher.avatar} alt={teacher.name}/>
                 <div>
-                    <strong>Yllan Gurgel</strong>
-                    <span>Física</span>
+                    <strong>{teacher.name}</strong>
+                    <span>{teacher.subject}</span>
                 </div>
             </header>
 
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio porro voluptatibus quod quaerat animi nesciunt voluptatum harum qui veritatis, cupiditate esse amet nisi expedita, rem, eos maxime pariatur minima dolor!
-            </p>
+            <p>{teacher.bio}</p>
             <footer>
                 <p>
                     Preço/hora
-                    <strong>R$ 40,00</strong>    
+                    <strong>{teacher.cost}</strong>    
                 </p>
-                <button type="button">
+                <a target="_blank" onClick={createNewConnection} href={ `https://wa.me/${teacher.whatsapp}` }>
                     <img src={whatsappIcon} alt="Whatsapp"/>
                     Entrar em contato
-                </button>
+                </a>
             </footer>
         </article>
     )
